@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WidgetLibrary</string>
+    <string name="default_loading">正在加载...</string>
+
+</resources>
