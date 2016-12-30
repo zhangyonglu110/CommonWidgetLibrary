@@ -1,6 +1,7 @@
 package com.zyl.widget.scrowview;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
@@ -51,17 +52,20 @@ public class ObservableScrollView extends ScrollView {
 	}
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent e) {
-		int action = e.getAction();
-		switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				downX = (int) e.getRawX();
-				downY = (int) e.getRawY();
-				break;
-			case MotionEvent.ACTION_MOVE:
-				int moveY = (int) e.getRawY();
-				if (Math.abs(moveY - downY) > mTouchSlop) {
-					return true;
-				}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+			int action = e.getAction();
+			switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					downX = (int) e.getRawX();
+					downY = (int) e.getRawY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					int moveY = (int) e.getRawY();
+					if (Math.abs(moveY - downY) > mTouchSlop) {
+						return true;
+					}
+			}
 		}
 		return super.onInterceptTouchEvent(e);
 	}
