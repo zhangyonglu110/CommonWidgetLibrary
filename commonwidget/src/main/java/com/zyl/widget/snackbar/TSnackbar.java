@@ -125,17 +125,27 @@ public final class TSnackbar {
     private int mDuration;
     private Callback mCallback;
 
-    private TSnackbar(ViewGroup parent) {
+    private TSnackbar(ViewGroup parent,boolean isshowstatusbar) {
         mParent = parent;
         mContext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if(isshowstatusbar) {
             mView = (SnackbarLayout) inflater.inflate(R.layout.tsnackbar_layout, mParent, false);
         }else{
-            mView = (SnackbarLayout) inflater.inflate(R.layout.tsnackbar_layout_1, mParent, false);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                mView = (SnackbarLayout) inflater.inflate(R.layout.tsnackbar_layout_1, mParent, false);
+            }else{
+                mView = (SnackbarLayout) inflater.inflate(R.layout.tsnackbar_layout, mParent, false);
+
+            }
 
         }
+//        }else{
+//            mView = (SnackbarLayout) inflater.inflate(R.layout.tsnackbar_layout_1, mParent, false);
+//
+//        }
 //        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //       System.out.println("bar height----------->"+getStatusBarHeight());
 //        layoutParams.height=56+getStatusBarHeight();
@@ -152,8 +162,8 @@ public final class TSnackbar {
 
     @NonNull
     public static TSnackbar make(@NonNull View view, @NonNull CharSequence text,
-                                 @Duration int duration) {
-        TSnackbar snackbar = new TSnackbar(findSuitableParent(view));
+                                 @Duration int duration,boolean isshow) {
+        TSnackbar snackbar = new TSnackbar(findSuitableParent(view),isshow);
         snackbar.setText(text);
         snackbar.setDuration(duration);
         return snackbar;
@@ -161,9 +171,9 @@ public final class TSnackbar {
 
 
     @NonNull
-    public static TSnackbar make(@NonNull View view, @StringRes int resId, @Duration int duration) {
+    public static TSnackbar make(@NonNull View view, @StringRes int resId, @Duration int duration,boolean isshow) {
         return make(view, view.getResources()
-                .getText(resId), duration);
+                .getText(resId), duration,isshow);
     }
 
     private static ViewGroup findSuitableParent(View view) {
@@ -669,10 +679,6 @@ public final class TSnackbar {
             a.recycle();
 
             setClickable(true);
-
-
-
-
             LayoutInflater.from(context)
                     .inflate(R.layout.tsnackbar_layout_include, this);
 
